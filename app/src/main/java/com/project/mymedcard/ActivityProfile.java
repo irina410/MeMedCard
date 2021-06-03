@@ -18,6 +18,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,6 +40,7 @@ public class ActivityProfile extends AppCompatActivity {
     String data = "";
     private ImageView imageView;
     private final int Pick_image = 1;
+    String allerg = "";
 
 
     TextView currentDate;
@@ -48,7 +51,7 @@ public class ActivityProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        imageView = (ImageView)findViewById(R.id.imageView);
+        imageView = (ImageView) findViewById(R.id.imageView);
 
         //Связываемся с нашей кнопкой Button:
         Button PickImage = (Button) findViewById(R.id.buttonfoto);
@@ -74,6 +77,23 @@ public class ActivityProfile extends AppCompatActivity {
         final EditText editTextName = (EditText) findViewById(R.id.editTextTextPersonName);
         final EditText editTextLastName = (EditText) findViewById(R.id.editTextTextPersonLastName);
         final EditText editTextFatherName = (EditText) findViewById(R.id.editTextTextFatherName);
+        final EditText editTextNumberSigned = (EditText) findViewById(R.id.editTextNumber);
+        final EditText editTextdiseases = (EditText) findViewById(R.id.editTextdiseases);
+        final EditText editTextphone = (EditText) findViewById(R.id.editTextPhone);
+        final CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox);
+
+
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (checkBox.isChecked()) {
+                    allerg = "присутствуют";
+                } else {
+                    allerg = "отсутствуют";
+                }
+            }
+        });
 
 
         SharedPreferences preferences = getSharedPreferences("default", MODE_PRIVATE);
@@ -146,17 +166,16 @@ public class ActivityProfile extends AppCompatActivity {
             public void onClick(View v) {
 
 
-
-
                 Intent intent = new Intent(ActivityProfile.this, MainActivity.class);
 
 //                Bitmap bitmap = (Bitmap)intent.getExtras().get("imegeview");
 
-   //             imageView.setImageBitmap(bitmap);
+                //             imageView.setImageBitmap(bitmap);
 
-                String[] myStrings = new String[]{editTextName.getText().toString(), editTextLastName.getText().toString(), editTextFatherName.getText().toString(), BloodType, data,};
-
-                intent.putExtra("strings", myStrings);
+//                String[] myStrings = new String[]{editTextName.getText().toString(), editTextLastName.getText().toString(), editTextFatherName.getText().toString(), BloodType, data, editTextNumberSigned.getText().toString(),
+//                        editTextdiseases.getText().toString(), editTextphone.getText().toString()};
+//
+//                intent.putExtra("strings", myStrings);
 
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("ed_name", editTextName.getText().toString());
@@ -164,6 +183,11 @@ public class ActivityProfile extends AppCompatActivity {
                 editor.putString("ed_fathername", editTextFatherName.getText().toString());
                 editor.putString("blood_type", BloodType);
                 editor.putString("date", data);
+                editor.putString("number", editTextNumberSigned.getText().toString());
+                editor.putString("diseases", editTextdiseases.getText().toString());
+                editor.putString("phone", editTextphone.getText().toString());
+                editor.putString("allerg", allerg);
+
                 //editor.putString("imagePreferance", encodeTobase64(imageView));
 
 
@@ -183,13 +207,15 @@ public class ActivityProfile extends AppCompatActivity {
         editTextFatherName.setText(userFatherName);
         String userdata = preferences.getString("data", "");
         currentDate.setText(userdata);
-
+        String usernumber = preferences.getString("number", "");
+        editTextNumberSigned.setText(usernumber);
+        String userdiseases = preferences.getString("diseases", "");
+        editTextdiseases.setText(userdiseases);
+        String phone = preferences.getString("phone", "");
+        editTextphone.setText(phone);
 
 
     }
-
-
-
 
 
     @Override
@@ -213,12 +239,6 @@ public class ActivityProfile extends AppCompatActivity {
                 }
         }
     }
-
-
-
-
-
-
 
 
     DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
@@ -259,4 +279,4 @@ public class ActivityProfile extends AppCompatActivity {
         return imageEncoded;
     }
 
-    }
+}
